@@ -1,7 +1,7 @@
 import copy, threading
 from client import DroidClient 
 
-class eightTileGame(object):
+class EightTileGame(object):
 
     def __init__(self, board):
         self.board = board
@@ -104,26 +104,22 @@ class eightTileGame(object):
         path.remove(None)
         return path
 
-class robot_control(object):
+def robot_com(robot_id, heading):
+    mapping = {
+        "up": 0,
+        "right": 90,
+        "down": 180,
+        "left": 270
+    }
 
-    def __init__(self, robot_id):
-        self.droid = DroidClient()
-        self.droid.connect_to_droid(robot_id)
+    robot = DroidClient()
+    robot.connect_to_droid(robot_id)
 
-    # initial orientation: all facing up
-    def roll(self, heading):
-        mapping = {
-            "up": 0,
-            "right": 90,
-            "down": 180,
-            "left": 270
-        }
-        droid.animate(5)
-        droid.roll(0.5, mapping.get(heading), 1)
-        droid.roll(0, 0, 0)
+    droid.animate(5)
+    droid.roll(0.5, mapping.get(heading), 1)
+    droid.roll(0, 0, 0)
 
-    def disconnect(self):
-        pass
+    robot.disconnect()
 
 def start_state(robot_num):
     mapping = {
@@ -138,9 +134,12 @@ def start_state(robot_num):
     }
     return mapping.get(robot_num)
 
+board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
+game = EightTileGame(board)
+
 # creating threads
-thread1 = threading.Thread(target = robot_com, args = (start_state.get(1),))
-thread2 = threading.Thread(target = robot_com, args = (start_state.get(2),))
+thread1 = threading.Thread(target = robot_com, args = (start_state.get(1), "left"))
+thread2 = threading.Thread(target = robot_com, args = (start_state.get(2), "right"))
 thread1.start()
 thread2.start()
 
