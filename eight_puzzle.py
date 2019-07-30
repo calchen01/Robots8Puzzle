@@ -1,10 +1,21 @@
 
 import heapq
 import copy
+import random
 class EightPuzzle(object):
 
     def __init__(self, board):
         self.board = board
+
+    def __init__(self):
+        self.board = [[1,2,3],[4,5,6],[7,8,0]]
+
+    def scramble(self,n):
+        self.board=[[1,2,3],[4,5,6],[7,8,0]]
+        for i in range(n):
+            move=random.choice(self.moves(self.board))
+            cpy=self.copy(self.board)
+            self.board=self.perform_move(cpy,move)
 
     def copy(self,board):
         return copy.deepcopy(board)
@@ -40,16 +51,16 @@ class EightPuzzle(object):
         ret = []
         # move down
         if empty[0] - 1 >= 0:
-            ret.append(((1, 0),board[empty[0]-1][empty[1]]))
+            ret.append(((1, 0),board[empty[0]-1][empty[1]],'down'))
         # move up
         if empty[0] + 1 <= 2:
-            ret.append(((-1, 0),board[empty[0]+1][empty[1]]))
+            ret.append(((-1, 0),board[empty[0]+1][empty[1]],'up'))
         # move right
         if empty[1] - 1 >= 0:
-            ret.append(((0, 1),board[empty[0]][empty[1]-1]))
+            ret.append(((0, 1),board[empty[0]][empty[1]-1],'right'))
         # move left
         if empty[1] + 1 <= 2:
-            ret.append(((0, -1),board[empty[0]][empty[1]+1]))
+            ret.append(((0, -1),board[empty[0]][empty[1]+1],'left'))
         # format: (direction of the move, # of the tile moved)
         return ret
 
@@ -85,9 +96,8 @@ class EightPuzzle(object):
         s = dict() #nodes already visited, keep the one with least cost
         q = []
         heapq.heapify(q)
-        print(self.board)
         hscore=self.heuristic(self.board)
-        t=(hscore,self.board_to_tuple(self.board),0,None)
+        t=(hscore,self.board_to_tuple(self.board),0,(None,None,None))
         heapq.heappush(q,t)
         d[t]=None
         lastmove = None
@@ -113,17 +123,18 @@ class EightPuzzle(object):
             return None
         res = []
         while lastmove is not None:
-            res.append(lastmove[3])
+            res.append(lastmove[3][1:])
             lastmove = d.get(lastmove)
         res.reverse()
-        # format: (direction of the move, # of the tile moved)
+        # format: (# of the tile moved, direction)
         return res[1:]
 
 
 
 m=[[0,1,3],[4,2,5],[7,8,6]]
-
-p=EightPuzzle(m)
+p=EightPuzzle()
+p.scramble(100)
+print(p.board)
 sol=p.find_soln()
 print(sol)
 print(len(sol))
