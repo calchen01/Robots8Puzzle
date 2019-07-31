@@ -57,14 +57,6 @@ while True:
     for command in commands:
         robot_nums.add(command[0])
 
-    
-    if len(robot_nums) <= 6 and len(commands) >= 12:
-        print(game.get_board())
-        print("Enter any key to start:")
-        input()
-        break
-
-    '''
     print(game.get_board())
     print("# of robots that need to be connected: " + str(len(robot_nums)))
     print("# of moves required: " + str(len(commands)))
@@ -72,7 +64,6 @@ while True:
     choice = input()
     if choice == "s":
         break
-    '''
 
 print("Started")
 
