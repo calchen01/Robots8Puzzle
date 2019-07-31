@@ -18,8 +18,8 @@ class Robot(object):
             "left": 270
         }
         self.robot.roll(0, mapping.get(heading), 0)
-        time.sleep(0.3)
-        self.robot.roll(1, mapping.get(heading), 0.6)
+        time.sleep(0.35)
+        self.robot.roll(1, mapping.get(heading), 0.62)
 
     def reset(self):
         self.robot.roll(0, 0, 0)
@@ -40,30 +40,51 @@ def get_robot_id(robot_num):
     }
     return mapping.get(robot_num)
 
-'''
-def find_soln():
+commands = []
+robot_nums = set()
+robots = []
+
+while True:
+    commands = []
+    robot_nums = set()
+    robots = [None for i in range(9)]
+
     board = [[1, 2, 3], [4, 5, 6], [7, 8, 0]]
     game = EightPuzzle(board)
+    game.scramble(100)
 
-thread = threading.Thread(target = find_soln)
-thread.start()
-thread.join()
-'''
+    commands = game.find_soln()
+    for command in commands:
+        robot_nums.add(command[0])
 
-robots = [None for i in range(9)]
-commands = [(1, "left"), (2, "left"), (5, "up"), (8, "up"),
-            (7, "right"), (6, "right"), (3, "down"), (1, "down"),
-            (2, "left"), (5, "left"), (8, "up"), (7, "up")]
+    
+    if len(robot_nums) <= 6 and len(commands) >= 12:
+        print(game.get_board())
+        print("Enter any key to start:")
+        input()
+        break
 
-for i in range(1, 9):
+    '''
+    print(game.get_board())
+    print("# of robots that need to be connected: " + str(len(robot_nums)))
+    print("# of moves required: " + str(len(commands)))
+    print("Enter s to start and any other key to re-scramble:")
+    choice = input()
+    if choice == "s":
+        break
+    '''
+
+print("Started")
+
+for i in robot_nums:
     robots[i] = Robot(get_robot_id(i))
 
-print("Enter any key to start:")
-start = input()
+print("Enter any key to execute commands:")
+input()
 
 for command in commands:
     robots[command[0]].roll(command[1])
 
-for i in range(1, 9):
+for i in robot_nums:
     robots[i].reset()
     robots[i].disconnect()
