@@ -60,7 +60,7 @@ while True:
     print(game.get_board())
     print("# of robots that need to be connected: " + str(len(robot_nums)))
     print("# of moves required: " + str(len(commands)))
-    print("Enter s to start and any other key to re-scramble:")
+    print("Enter s to start or any other key to re-scramble:")
     choice = input()
     if choice == "s":
         break
